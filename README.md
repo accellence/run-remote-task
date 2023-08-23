@@ -101,7 +101,7 @@ This diagram explains the interaction without going too deep into details:
    If you like to use local storage:
    ```json
    {
-       "path": "path/to/data/directory,
+       "path": "path/to/data/directory",
        "clientPublicKey": "path/to/public-key-client.pem",
        "serverPublicKey": "path/to/public-key-server.pem",
        "clientPrivateKey": "path/to/private-key-client.pem",
