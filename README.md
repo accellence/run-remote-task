@@ -1,6 +1,5 @@
 # Run remote task
-Adapted version of the "run-remote-task" package, created by antelle. Orig-Src: https://github.com/antelle/run-remote-task
-Extended with support for local path, e.g. when the WebDAV repro is running on the same machine as the server instance.
+Adapted version of \"@antelle/run-remote-task\", with some improvements and extended support for local path, e.g. when the WebDAV repro is running on the same machine as the server instance.
 
 ===
 Runs tasks on a remote machine with communication over a WebDAV server.
