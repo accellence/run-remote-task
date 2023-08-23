@@ -382,7 +382,8 @@ function listFiles(config) {
                 config.server,
                 { headers: getAuthHeader(config) },
                 (res) => {
-                    if (res.statusCode !== 200) {
+                    if (res.statusCode !== 200
+                        && res.statusCode !== 405) {
                         console.error(`Poll error: HTTP status code ${res.statusCode}`);
                         return reject(`HTTP status code ${res.statusCode}`);
                     }
@@ -390,7 +391,7 @@ function listFiles(config) {
                     res.on('data', (chunk) => body.push(chunk));
                     res.on('end', async () => {
                         const resStr = Buffer.concat(body).toString('utf8');
-                        const urls = [...resStr.matchAll(/href="([\w\.\-%]+)"/gi)].map((match) =>
+                        const urls = [...resStr.matchAll(/<a.*?>(.*?)<\/a>/gi)].map((match) =>
                             decodeURIComponent(match[1])
                         );
                         resolve(await deleteExpiredFiles(config, convertUrls(urls)));
@@ -519,7 +520,8 @@ function deleteFile(config, fileUrl) {
                 config.server + fileUrl,
                 { method: 'DELETE', headers: getAuthHeader(config) },
                 (res) => {
-                    if (res.statusCode !== 204) {
+                    if (res.statusCode !== 204
+                        && res.statusCode !== 200) {
                         console.error(`Delete error: HTTP status code ${res.statusCode}`);
                         return reject(`HTTP status code ${res.statusCode}`);
                     }
