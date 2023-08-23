@@ -7,9 +7,9 @@ const { Storage } = require('@google-cloud/storage');
 const { execSync } = require('child_process');
 
 function configureHost(config) {
-    if (!config.server && !config.aws && !config.gcp) {
+    if (!config.server && !config.aws && !config.gcp && !config.path) {
         throw new Error(
-            'Server is missing in config, there should be either of: "server", "aws", "gcp'
+            'Server is missing in config, there should be either of: "server", "aws", "gcp" or "path"'
         );
     }
     if (config.aws) {
@@ -98,11 +98,21 @@ async function runRemoteTask(config, inputData) {
             throw new Error('No output or error file found');
         }
     } finally {
-        for (const inout of ['in', 'out']) {
+        for (const inout of ['in']) {
             if (task[inout]) {
                 for (const file of Object.values(task[inout])) {
                     console.log(`Deleting task file ${file.url}`);
                     await deleteFile(config, file.url);
+                }
+            }
+        }
+        if (!config.path) {
+            for (const inout of ['out']) {
+                if (task[inout]) {
+                    for (const file of Object.values(task[inout])) {
+                        console.log(`Deleting task file ${file.url}`);
+                        await deleteFile(config, file.url);
+                    }
                 }
             }
         }
@@ -123,7 +133,8 @@ async function startServer(config) {
     testSign(serverPrivateKey, serverPublicKey, clientPublicKey);
 
     const desc =
-        config.server ||
+        config.server || 
+        config.path ||
         (config.gcp && `GCP:${config.gcp.projectId}/${config.gcp.bucketName}`) ||
         (config.aws && `AWS:${config.aws.bucket}`) ||
         '?';
@@ -301,6 +312,15 @@ function upload(config, fileUrl, data) {
                 }
                 resolve();
             });
+        } else if (config.path) {
+            try {
+                const filePath = path.join(config.path, fileUrl);
+                fs.writeFileSync(filePath, data);
+                resolve();
+            } catch (error) {
+                console.error('Error writing file:', error);
+                reject(error);
+            }
         } else {
             const req = proto(config).request(
                 config.server + fileUrl,
@@ -346,6 +366,17 @@ function listFiles(config) {
                 const urls = data.Contents.map((item) => item.Key);
                 resolve(await deleteExpiredFiles(config, convertUrls(urls)));
             });
+        } else if (config.path) {
+            try {
+                const files = fs.readdirSync(config.path);
+
+                const urls = files.map(file => decodeURIComponent(file));
+
+                resolve(deleteExpiredFiles(config, convertUrls(urls)));
+            } catch (error) {
+                console.error('Error reading or processing files:', error);
+                reject(error);
+            }
         } else {
             const req = proto(config).get(
                 config.server,
@@ -412,6 +443,17 @@ function downloadFile(config, fileUrl) {
                 fs.writeFileSync(fileName, data.Body);
                 resolve(fileName);
             });
+        } else if (config.path) {
+            try {
+                const sourcePath = path.join(config.path, fileUrl);
+                const destinationPath = path.join(os.tmpdir(), path.basename(fileUrl));
+
+                fs.copyFileSync(sourcePath, destinationPath);
+                resolve(destinationPath);
+            } catch (error) {
+                console.error('Error copying file:', error);
+                reject(error);
+            }
         } else {
             const req = proto(config).get(
                 config.server + fileUrl,
@@ -463,6 +505,15 @@ function deleteFile(config, fileUrl) {
                 }
                 resolve();
             });
+        } else if (config.path) {
+            try {
+                const filePath = path.join(config.path, fileUrl);
+                fs.rmSync(filePath);
+                resolve();
+            } catch (error) {
+                console.error('Error deleting file:', error);
+                reject(error);
+            }
         } else {
             const req = proto(config).request(
                 config.server + fileUrl,

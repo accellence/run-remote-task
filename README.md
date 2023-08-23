@@ -1,5 +1,8 @@
 # Run remote task
+Adapted version of the "run-remote-task" package, created by antelle. Orig-Src: https://github.com/antelle/run-remote-task
+Extended with support for local path, e.g. when the WebDAV repro is running on the same machine as the server instance.
 
+===
 Runs tasks on a remote machine with communication over a WebDAV server.
 
 All messages are signed, which means you can use it even if you don't trust the WebDAV server. 
@@ -84,6 +87,21 @@ This diagram explains the interaction without going too deep into details:
            "region": "eu-central-1",
            "bucket": "my-bucket"
        },
+       "clientPublicKey": "path/to/public-key-client.pem",
+       "serverPublicKey": "path/to/public-key-server.pem",
+       "clientPrivateKey": "path/to/private-key-client.pem",
+       "serverPrivateKey": "path/to/private-key-server.pem",
+       "pollMillis": 5000,
+       "taskExpirationMillis": 600000,
+       "command": "run_task.sh",
+       "commandRetries": 10
+   }
+   ```
+   
+   If you like to use local storage:
+   ```json
+   {
+       "path": "path/to/data/directory,
        "clientPublicKey": "path/to/public-key-client.pem",
        "serverPublicKey": "path/to/public-key-server.pem",
        "clientPrivateKey": "path/to/private-key-client.pem",
