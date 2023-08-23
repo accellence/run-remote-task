@@ -1,32 +1,43 @@
 {
-    "name": "run-remote-task",
-    "version": "0.5.0",
-    "description": "",
-    "main": "index.js",
-    "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1"
-    },
-    "keywords": [],
-    "author": "accellence",
-    "license": "MIT",
-    "bin": {
-        "run-remote-task": "cli.js"
-    },
-    "devDependencies": {
-        "babel-eslint": "^10.1.0",
-        "eslint": "^6.8.0",
-        "eslint-config-prettier": "^6.10.1",
-        "eslint-config-standard": "^14.1.1",
-        "eslint-plugin-import": "^2.20.2",
-        "eslint-plugin-node": "^11.1.0",
-        "eslint-plugin-prettier": "^3.1.2",
-        "eslint-plugin-promise": "^4.2.1",
-        "eslint-plugin-standard": "^4.0.1",
-        "prettier": "^2.0.2"
-    },
-    "dependencies": {
-        "@google-cloud/storage": "^5.0.1",
-        "aws-sdk": "^2.688.0",
-        "minimist": "^1.2.5"
-    }
+  "name": "@accellence/run-remote-task",
+  "version": "1.0.1",
+  "description": "Adapted version of \"antelle/run-remote-task\" package, with some improvements and extended support for local path, e.g. when the WebDAV repro is running on the same machine as the server instance.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "accellence",
+  "license": "MIT",
+  "bin": {
+    "run-remote-task": "cli.js"
+  },
+  "devDependencies": {
+    "babel-eslint": "^10.1.0",
+    "eslint": "^6.8.0",
+    "eslint-config-prettier": "^6.10.1",
+    "eslint-config-standard": "^14.1.1",
+    "eslint-plugin-import": "^2.20.2",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-prettier": "^3.1.2",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^4.0.1",
+    "prettier": "^2.0.2"
+  },
+  "dependencies": {
+    "@google-cloud/storage": "^5.0.1",
+    "aws-sdk": "^2.688.0",
+    "minimist": "^1.2.5"
+  },
+  "directories": {
+    "doc": "docs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/accellence/run-remote-task.git"
+  },
+  "bugs": {
+    "url": "https://github.com/accellence/run-remote-task/issues"
+  },
+  "homepage": "https://github.com/accellence/run-remote-task#readme"
 }
