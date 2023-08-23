@@ -127,13 +127,13 @@ This diagram explains the interaction without going too deep into details:
 5. Run the server:
 
     ```sh
-    npx run-remote-task --config=config.json --server
+    npx @accellence/run-remote-task --config=config.json --server
     ```
 
 6. Test the client:
 
     ```sh
-   npx run-remote-task --config=config.json --client --input=input.txt --output=output.txt
+   npx @accellence/run-remote-task --config=config.json --client --input=input.txt --output=output.txt
     ```
 
 ## License
