@@ -134,7 +134,7 @@ This diagram explains the interaction without going too deep into details:
 6. Test the client:
 
     ```sh
-   npx run-remote-task --config=config.json --client --input=input.txt
+   npx run-remote-task --config=config.json --client --input=input.txt --output=output.txt
     ```
 
 ## License
