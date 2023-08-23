@@ -17,7 +17,16 @@ function configureHost(config) {
     }
 }
 
-async function runRemoteTask(config, inputData) {
+function renameFile(oldname, newname){
+    fs.rename(`${oldname}`, `${newname}`, function(err){
+        if(err){
+            //show the error
+			console.log(`Error while renaming file from "${oldname}" to "${newname}"`);
+        }
+    })
+}
+
+async function runRemoteTask(config, inputData, outputFileName) {
     for (const prop of ['clientPrivateKey', 'clientPublicKey', 'serverPublicKey', 'pollMillis']) {
         if (!config[prop]) {
             throw new Error(`config.${prop} is empty`);
@@ -79,10 +88,11 @@ async function runRemoteTask(config, inputData) {
         if (task.out.dat) {
             const outFile = await downloadFile(config, task.out.dat.url);
             const outData = fs.readFileSync(outFile);
+            if(outputFileName) { renameFile(outFile, outputFileName); }
             if (!verify(outData, signature, runRemoteTask.serverPublicKey)) {
                 throw new Error('Received a result with a bad signature');
             }
-            console.log(`Task ${taskId} completed successfully, result: ${outFile}`);
+            console.log(`Task ${taskId} completed successfully, result: ${outputFileName}`);
             return { file: outFile, data: outData };
         } else if (task.out.err) {
             const errFile = task.out.err ? await downloadFile(config, task.out.err.url) : null;
